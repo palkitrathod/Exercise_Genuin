@@ -1,27 +1,27 @@
-# Configuration for brands and its feautures
+# Configuration for brands and their features
 brands = {
     "begenuin": {
         "url": "https://begenuin.com/home",
         "features": {
-            "login": False,
-            "likes": True,
-            "comments": True
+            "login_button": False,
+            "get_app_button": True,
+            "become_creator_tag": True
         }
     },
     "shorts_ted": {
         "url": "https://shorts.ted.com/",
         "features": {
-            "login": False,
-            "likes": False,
-            "comments": True
+            "login_button": False,
+            "get_app_button": True,
+            "become_creator_tag": False
         }
     },
     "gopuff_old": {
         "url": "https://gopuff_old.begenuin.com/home",
         "features": {
-            "login": True,  #It support login functionality
-            "likes": True,
-            "comments": True
+            "login_button": True,
+            "get_app_button": False,
+            "become_creator_tag": True
         }
     }
 }
