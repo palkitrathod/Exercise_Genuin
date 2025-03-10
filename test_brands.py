@@ -17,7 +17,7 @@ def page_fixture(request):
 def test_homepage_loads(page_fixture: Page, brand, data):
     """Check if the homepage loads properly for each brand."""
     page_fixture.goto(data["url"], wait_until="domcontentloaded")
-    print(f"✅ {brand} - Page Title: {page_fixture.title()}")
+    print(f" {brand} - Page Title: {page_fixture.title()}")
 
 
 @pytest.mark.parametrize("brand, data", brands.items())
@@ -29,10 +29,10 @@ def test_get_app_button(page_fixture: Page, brand, data):
 
     if data["features"]["get_app"]:
         expect(get_app_button).to_be_visible()
-        print(f"✅ 'Get App' button is present on {brand}")
+        print(f" 'Get App' button is present on {brand}")
     else:
-        assert not get_app_button.is_visible(), f"❌ 'Get App' button should NOT be present on {brand} (Test Failed!)"
-        print(f"✅ 'Get App' button is correctly NOT visible on {brand}")
+        assert not get_app_button.is_visible(), f" 'Get App' button should NOT be present on {brand} (Test Failed!)"
+        print(f" 'Get App' button is correctly NOT visible on {brand}")
 
 
 @pytest.mark.parametrize("brand, data", brands.items())
@@ -45,10 +45,10 @@ def test_become_creator_option(page_fixture: Page, brand, data):
 
     if data["features"]["become_creator"]:
         expect(become_creator_option).to_be_visible()
-        print(f"✅ 'Become a Creator' option is present on {brand}")
+        print(f" 'Become a Creator' option is present on {brand}")
     else:
-        assert not become_creator_option.is_visible(), f"❌ 'Become a Creator' option should NOT be present on {brand} (Test Failed!)"
-        print(f"✅ 'Become a Creator' option is correctly NOT visible on {brand}")
+        assert not become_creator_option.is_visible(), f" 'Become a Creator' option should NOT be present on {brand} (Test Failed!)"
+        print(f" 'Become a Creator' option is correctly NOT visible on {brand}")
 
 
 @pytest.mark.parametrize("brand, data", brands.items())
@@ -61,10 +61,10 @@ def test_login_button(page_fixture: Page, brand, data):
 
     if data["features"]["login"]:
         expect(login_button).to_be_visible()
-        print(f"✅ Login button is present on {brand}")
+        print(f" Login button is present on {brand}")
     else:
-        assert not login_button.is_visible(), f"❌ Login button should NOT be present on {brand} (Test Failed!)"
-        print(f"✅ Login button is correctly NOT visible on {brand}")
+        assert not login_button.is_visible(), f" Login button should NOT be present on {brand} (Test Failed!)"
+        print(f" Login button is correctly NOT visible on {brand}")
 
 
 @pytest.mark.parametrize("brand, data", brands.items())
@@ -85,7 +85,7 @@ def test_login_functionality(page_fixture: Page, brand, data):
         login_button.click()
         page_fixture.wait_for_timeout(2000)
     except:
-        pytest.fail(f"❌ ERROR: Login button NOT found on {brand}")
+        pytest.fail(f" ERROR: Login button NOT found on {brand}")
 
     # Find and enter email in the login form
     email_field = page_fixture.locator("//input[@type='email']")
@@ -94,6 +94,6 @@ def test_login_functionality(page_fixture: Page, brand, data):
         expect(email_field).to_be_visible()
         email_field.fill("testuser@yopmail.com")
         email_field.press("Enter")
-        print(f"✅ Login form filled and submitted successfully for {brand}")
+        print(f" Login form filled and submitted successfully for {brand}")
     except:
-        pytest.fail(f"❌ ERROR: Could not find login email field on {brand}")
+        pytest.fail(f" ERROR: Could not find login email field on {brand}")
