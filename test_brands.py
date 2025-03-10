@@ -25,14 +25,13 @@ def test_get_app_button(page_fixture: Page, brand, data):
     """Verify if the 'Get App' button exists where expected."""
     page_fixture.goto(data["url"], wait_until="domcontentloaded")
 
-    # ✅ Locator for "Get App" button
     get_app_button = page_fixture.locator("//button[contains(text(), 'Get App')]")
 
-    if data["features"].get("get_app"):
+    if data["features"]["get_app"]:
         expect(get_app_button).to_be_visible()
         print(f"✅ 'Get App' button is present on {brand}")
     else:
-        assert not get_app_button.is_visible(), f"❌ 'Get App' button should NOT be present on {brand} (Test should fail if found)"
+        assert not get_app_button.is_visible(), f"❌ 'Get App' button should NOT be present on {brand} (Test Failed!)"
         print(f"✅ 'Get App' button is correctly NOT visible on {brand}")
 
 
@@ -41,14 +40,14 @@ def test_become_creator_option(page_fixture: Page, brand, data):
     """Verify if the 'Become a Creator' option exists where expected."""
     page_fixture.goto(data["url"], wait_until="domcontentloaded")
 
-    # ✅ Locator for "Become a Creator" option
-    become_creator_option = page_fixture.locator("//a[contains(text(), 'Become a Creator')]")
+    become_creator_option = page_fixture.locator(
+        "(//p[@class='w-64 overflow-hidden p-3 text-start text-body-1-bold'])[1]")
 
-    if data["features"].get("become_creator"):
+    if data["features"]["become_creator"]:
         expect(become_creator_option).to_be_visible()
         print(f"✅ 'Become a Creator' option is present on {brand}")
     else:
-        assert not become_creator_option.is_visible(), f"❌ 'Become a Creator' option should NOT be present on {brand} (Test should fail if found)"
+        assert not become_creator_option.is_visible(), f"❌ 'Become a Creator' option should NOT be present on {brand} (Test Failed!)"
         print(f"✅ 'Become a Creator' option is correctly NOT visible on {brand}")
 
 
@@ -57,14 +56,14 @@ def test_login_button(page_fixture: Page, brand, data):
     """Verify if the login button exists for gopuff_old and not for others."""
     page_fixture.goto(data["url"], wait_until="domcontentloaded")
 
-    # ✅ Locator for "Login" button
-    login_button = page_fixture.locator("//button[contains(text(), 'Log in')]")
+    login_button = page_fixture.locator(
+        "(//button[@class='inline-flex items-center justify-center rounded-md transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary-600 after::bg-primary-600 py-2 h-8 gap-2 px-4'])[1]")
 
-    if data["features"].get("login"):
+    if data["features"]["login"]:
         expect(login_button).to_be_visible()
-        print(f"✅ Login button is visible on {brand}")
+        print(f"✅ Login button is present on {brand}")
     else:
-        assert not login_button.is_visible(), f"❌ Login button should NOT be present on {brand} (Test should fail if found)"
+        assert not login_button.is_visible(), f"❌ Login button should NOT be present on {brand} (Test Failed!)"
         print(f"✅ Login button is correctly NOT visible on {brand}")
 
 
@@ -74,32 +73,27 @@ def test_login_functionality(page_fixture: Page, brand, data):
 
     page_fixture.goto(data["url"], wait_until="domcontentloaded")
 
-    # ✅ Locator for "Login" button
-    login_button = page_fixture.locator("//button[contains(text(), 'Log in')]")
-
-    # ✅ Only run login test for gopuff_old
-    if brand != "gopuff_old":
+    if not data["features"]["login"]:
         pytest.skip(f"⏭ Skipping login test for {brand} (Login feature not supported)")
 
-    # ✅ Ensure login button is found for gopuff_old
+    # Find and click the login button
+    login_button = page_fixture.locator(
+        "(//button[@class='inline-flex items-center justify-center rounded-md transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary-600 after::bg-primary-600 py-2 h-8 gap-2 px-4'])[1]")
+
     try:
-        page_fixture.wait_for_selector("//button[contains(text(), 'Log in')]", timeout=5000)
-    except Exception:
-        pytest.fail(f"❌ Login button NOT found on {brand}, but it should be present!")
+        expect(login_button).to_be_visible()
+        login_button.click()
+        page_fixture.wait_for_timeout(2000)
+    except:
+        pytest.fail(f"❌ ERROR: Login button NOT found on {brand}")
 
-    # ✅ Perform login process
-    expect(login_button).to_be_visible()
-    print(f"✅ Login button found on {brand}, proceeding with login...")
-    login_button.click()
-    page_fixture.wait_for_timeout(2000)
-
-    # ✅ Find and enter email
+    # Find and enter email in the login form
     email_field = page_fixture.locator("//input[@type='email']")
-    expect(email_field).to_be_visible()
-    email_field.fill("testuser@yopmail.com")
 
-    # ✅ Submit login form
-    email_field.press("Enter")
-    page_fixture.wait_for_timeout(2000)
-
-    print("✅ Login form filled and submitted successfully.")
+    try:
+        expect(email_field).to_be_visible()
+        email_field.fill("testuser@yopmail.com")
+        email_field.press("Enter")
+        print(f"✅ Login form filled and submitted successfully for {brand}")
+    except:
+        pytest.fail(f"❌ ERROR: Could not find login email field on {brand}")
